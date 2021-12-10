@@ -17,7 +17,7 @@ $categories->description= $data->description;
 $categories->tax= $data->tax;
 if ($categories->addCategory()){
     echo json_encode(
-        array('massage' => 'Record Inserted')
+        array('massage' => 'Record Inserted...')
     );
 }
 else {
