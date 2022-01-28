@@ -16,6 +16,7 @@
     </style>
 </head>
 <body>
+    
     <form method="POST">
         Maximum Attepts : 8<br><br>
         Guess:<input type="text" name="guess" maxlength="1" autocomplete="off"><br><br>
