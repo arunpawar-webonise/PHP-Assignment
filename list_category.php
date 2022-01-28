@@ -19,7 +19,7 @@ if ($numOfRows > 0){
         $post_item = array(
             'category_name'=>$category_name,
             'description'=>$description,
-            'tax'=>$tax
+            'tax'=>$tax.'%'
         );
         array_push($posts_arr['data'], $post_item);
     }
@@ -27,6 +27,6 @@ if ($numOfRows > 0){
 }
 else {
     echo json_encode(
-        array ('massage' => 'No posts found')
+        array ('massage' => 'Category Not Added yet')
     );
 }

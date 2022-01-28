@@ -7,15 +7,15 @@ header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,
 include 'db_connections.php';
 include 'cart.php';
 
-$databse = Database::getInstance();
-$db = $databse->getConnection();
+$database = Database::getInstance();
+$db = $database->getConnection();
 
 $cart=new Cart($db);
 
 $data = json_decode(file_get_contents("php://input"));
 
-$cart->cart_id=$data->cart_id;
-$cart->product_id=$data->product_id;
+$cart->cart_name=$data->cart_name;
+$cart->product_name=$data->product_name;
 
 if($cart->addProduct()){
     echo json_encode('product added to cart');

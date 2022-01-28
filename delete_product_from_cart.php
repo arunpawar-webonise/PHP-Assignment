@@ -10,15 +10,16 @@ include 'cart.php';
 $databse = Database::getInstance();
 $db = $databse->getConnection();
 
-$cart=new Cart($db);
+$cart = new Cart($db);
 
 $data = json_decode(file_get_contents("php://input"));
 
-$cart->cart_id=$data->cart_id;
+$cart->cart_name = $data->cart_name;
+$cart->product_name = $data->product_name;
 
-if($cart->deleteProduct()){
+
+if ($cart->deleteProduct()) {
     echo json_encode('product deleted from cart');
-}
-else{
+} else {
     echo json_encode('failed to delete product');
 }

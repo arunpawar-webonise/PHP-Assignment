@@ -6,8 +6,13 @@ include 'db_connections.php';
 include 'products.php';
 
 $databse = Database::getInstance();
+
 $db = $databse->getConnection();
+
+
 $products = new Products($db);
+$products = new Products($db);
+
 $result = $products->listProduct();
 $numOfRows = $result->rowCount();
 
@@ -18,11 +23,10 @@ if ($numOfRows > 0){
         extract($row);
         $post_item = array(
             'product_id'=>$product_id,
-            'cart_id'=>$cart_id,
             'product_name'=>$product_name,
             'product_description'=>$product_description,
             'product_price'=>$product_price,
-            'discount'=>$discount,
+            'discount'=>$discount.'%',
             'category'=>$category
         );
         array_push($posts_arr['data'], $post_item);

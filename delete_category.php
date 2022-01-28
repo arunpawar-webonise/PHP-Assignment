@@ -19,9 +19,9 @@ $categories->description= $data->description;
 $categories->tax= $data->tax;
 
 if ($categories->deleteCategory()){
-    echo json_encode(
-        array('massage' => 'Record deleted')
-    );
+    echo $data->category_name.' Category is Deleted ';
+
+
 }
 else {
     echo json_encode(

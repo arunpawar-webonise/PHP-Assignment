@@ -13,7 +13,6 @@ $db = $databse->getConnection();
 $products = new Products($db);
 $data = json_decode(file_get_contents("php://input"));
 
-$products->cart_id=$data->cart_id;
 $products->product_name=$data->product_name;
 $products->product_description= $data->product_description;
 $products->product_price= $data->product_price;
@@ -22,12 +21,12 @@ $products->category= $data->category;
 
 if ($products->addProduct()){
     echo json_encode(
-        array('massage' => 'Product Inserted')
+        array('massage' => 'Product Added')
     );
 }
 else {
     echo json_encode(
-        array('massage' => 'Failed to insert')
+        array('massage' => 'Failed to Add Product')
     );
 }
 ?>

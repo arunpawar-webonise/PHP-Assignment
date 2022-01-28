@@ -12,9 +12,9 @@ $db = $databse->getConnection();
 
 $cart=new Cart($db);
 
-$data = json_decode(file_get_contents("php://input"));
+$data=json_decode(file_get_contents("php://input"));
 
-$cart->cart_id=$data->cart_id;
+$cart->cart_name=$data->cart_name;
 
 if($cart->deleteCart()){
     echo json_encode('cart deleted');

@@ -11,17 +11,19 @@ $databse = Database::getInstance();
 
 $db = $databse->getConnection();
 $categories = new Categories($db);
+
 $data = json_decode(file_get_contents("php://input"));
-$categories->category_name= $data->category_name;
-$categories->description= $data->description;
-$categories->tax= $data->tax;
-if ($categories->addCategory()){
+
+$categories->category_name = $data->category_name;
+$categories->description = $data->description;
+$categories->tax = $data->tax;
+
+if ($categories->addCategory()) {
     echo json_encode(
-        array('massage' => 'Record Inserted')
+        array('massage' => 'Category Added')
     );
-}
-else {
+} else {
     echo json_encode(
-        array('massage' => 'Failed to insert')
+        array('massage' => 'Failed to Add Category')
     );
 }

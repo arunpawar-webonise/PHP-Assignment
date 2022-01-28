@@ -19,7 +19,7 @@ $products->product_name=$data->product_name;
 
 if ($products->deleteProduct()){
     echo json_encode(
-        array('massage' => 'Record deleted')
+        array('massage' => 'Product Deleted')
     );
 }
 else {

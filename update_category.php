@@ -19,7 +19,7 @@ $categories->description= $data->description;
 $categories->tax= $data->tax;
 if ($categories->updateCategory()){
     echo json_encode(
-        array('massage' => 'Record Updated')
+        array('massage' => 'Category Updated')
     );
 }
 else {
