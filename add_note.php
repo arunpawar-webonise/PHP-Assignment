@@ -15,25 +15,23 @@ $todo_list = new ToDoList($db);
 
 $data = json_decode(file_get_contents("php://input"));
 
-$todo_list->todo_topic = $data->todo_topic;
-$todo_list->todo_description = $data->todo_description;
-$todo_list->user_id = $data->user_id;
+$todo_list->username = $data->username;
+$todo_list->topic = $data->topic;
+$todo_list->description = $data->description;
 $todo_list->priority = $data->priority;
 
-if($data->todo_description){
+if ($data->description) {
     if ($todo_list->addNote()) {
         echo json_encode(
-            array('Note Added...')
+            array('message' => 'Note Added...')
         );
     } else {
         echo json_encode(
-            array( 'Failed to add note')
+            array('message' => 'Failed to add note')
         );
     }
-}
-else{
+} else {
     echo json_encode(
-        array('enter description')
+        array('message' => 'enter description')
     );
 }
-

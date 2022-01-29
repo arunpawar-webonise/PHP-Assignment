@@ -15,9 +15,9 @@ $note = new ToDoList($db_connection);
 
 $data = json_decode(file_get_contents("php://input"));
 
-$note->todo_topic = $data->todo_topic;
-$note->todo_description = $data->todo_description;
-$note->user_id = $data->user_id;
+$note->id = $data->id;
+$note->topic = $data->todo_topic;
+$note->description = $data->description;
 $note->priority = $data->priority;
 
 if ($note->update()) {
@@ -29,6 +29,6 @@ if ($note->update()) {
 } else {
     echo json_encode(
 
-        array('massage' => 'Note Not upadated')
+        array('massage' => 'Failed to update note')
     );
 }

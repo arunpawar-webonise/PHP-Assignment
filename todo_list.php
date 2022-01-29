@@ -2,9 +2,10 @@
 class ToDoList
 {
     private $conn;
-    public $todo_topic;
-    public $todo_description;
-    public $user_id;
+    public $id;
+    public $username;
+    public $topic;
+    public $description;
     public $priority;
     public $word;
 
@@ -15,72 +16,171 @@ class ToDoList
 
     public function addNote()
     {
-        $date = date("d-m-y");
+        $query1 = "select username from todo_list where username='$this->username'";
+        $result1 = $this->conn->query($query1);
 
-        $query = "INSERT INTO `todo_list`(`todo_topic`, `todo_description`, `insert_date`, `update_date`, `user_id`, `priority`) VALUES ('$this->todo_topic','$this->todo_description','$date','','$this->user_id','$this->priority')";
+        $rows = $result1->rowCount();
+        date_default_timezone_set('Asia/Kolkata');
+        $created_at = date('Y-m-d h:i:s');
 
-        $stmt = $this->conn->prepare($query);
+        if ($rows > 0) {
+            if ($this->priority == 0) {
+                echo json_encode(
+                    array('message' => 'priority should not be 0')
+                );
+                die();
+            }
 
-        if ($stmt->execute()) {
+            $sql2 = "select topic,description,priority from todo_list where username='$this->username'";
+            $result2 = $this->conn->query($sql2);
 
-            return true;
+            while ($record2 = $result2->fetch(PDO::FETCH_ASSOC)) {
+                if ($record2['topic'] == $this->topic && $record2['description'] == $this->description) {
+                    echo json_encode(
+                        array('message' => "User Available with same topic and description")
+                    );
+                    die();
+                }
+
+                if ($record2['priority'] == 0) {
+                    $query = "UPDATE `todo_list` SET `topic`='$this->topic',`description`='$this->description',`updated_at`='$created_at',`priority`=$this->priority WHERE username='$this->username'";
+
+                    $stmt = $this->conn->prepare($query);
+
+                    if ($stmt->execute()) {
+
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+
+            $query = "INSERT INTO `todo_list`(`username`, `topic`, `description`, `created_at`, `updated_at`, `priority`) VALUES ('$this->username','$this->topic','$this->description','$created_at','',$this->priority)";
+
+            $stmt = $this->conn->prepare($query);
+
+            if ($stmt->execute()) {
+
+                return true;
+            } else {
+                return false;
+            }
         } else {
-
-            return false;
+            echo json_encode(
+                array(
+                    'message' => 'User Does not exist'
+                )
+            );
+            die();
         }
     }
 
     public function update()
     {
-        $date = date("d-m-y");
+        $query1 = "select id from todo_list where id=$this->id";
+        $result1 = $this->conn->query($query1);
 
-        $query = "UPDATE `todo_list` SET `todo_topic`='$this->todo_topic',`todo_description`='$this->todo_description',`update_date`='$date'  WHERE `user_id`='$this->user_id' and `priority`='$this->priority'";
+        $rows = $result1->rowCount();
 
-        $stmt = $this->conn->prepare($query);
+        if ($rows > 0) {
+            if ($this->priority == 0) {
+                echo json_encode(
+                    array('message' => 'priority should not be 0')
+                );
+                die();
+            }
+            if ($this->description == '') {
+                echo json_encode(
+                    array('message' => 'enter description')
+                );
+                die();
+            }
+            date_default_timezone_set('Asia/Kolkata');
+            $updated_at = date('Y-m-d h:i:s');
+            $query2 = "UPDATE `todo_list` SET `topic`='$this->topic',`description`='$this->description',`updated_at`='$updated_at',`priority`=$this->priority WHERE id='$this->id'";
 
-        if ($stmt->execute()) {
+            $stmt = $this->conn->prepare($query2);
 
-            return true;
+            if ($stmt->execute()) {
+
+                return true;
+            } else {
+
+                return false;
+            }
         } else {
-
-            return false;
+            echo json_encode(
+                array(
+                    'message' => 'User Does not exist'
+                )
+            );
+            die();
         }
     }
 
     public function delete()
     {
-        $query = "DELETE FROM `todo_list` WHERE user_id=$this->user_id and priority=$this->priority";
 
-        $stmt = $this->conn->prepare($query);
+        $query1 = "select id from todo_list where id=$this->id";
+        $result1 = $this->conn->query($query1);
+        $rows = $result1->rowCount();
 
-        if ($stmt->execute()) {
+        if ($rows > 0) {
+            $query2 = "delete from todo_list where id=$this->id";
+            $stmt = $this->conn->prepare($query2);
 
-            return true;
+            if ($stmt->execute()) {
+                return true;
+            } else {
+
+                return false;
+            }
         } else {
+            echo json_encode(
+                array(
+                    'message' => 'User Does not Exist'
+                )
+            );
+            die();
+        }
+    }
 
+
+
+    public function readByWord()
+    {
+
+        $query1 = "select username from todo_list where username='$this->username'";
+        $result1 = $this->conn->query($query1);
+
+        $rows = $result1->rowCount();
+        if ($rows > 0) {
+            $query = "SELECT * FROM `todo_list` WHERE description like '%$this->word%' and username='$this->username'";
+
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+            return $stmt;
+        } else {
             return false;
         }
     }
 
-    public function readByWord()
-    {
-        $query = "SELECT * FROM `todo_list` WHERE todo_description like '%$this->word%' and user_id=$this->user_id";
-
-        $stmt = $this->conn->prepare($query);
-
-        $stmt->execute();
-        return $stmt;
-    }
 
     public function readall()
     {
         $query = "SELECT * FROM todo_list";
-
         $stmt = $this->conn->prepare($query);
-
         $stmt->execute();
         return $stmt;
     }
 
-   
+    public function read_specific_user_notes()
+    {
+        $query = "SELECT * FROM todo_list where username='$this->username'";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $stmt->rowCount();
+        return $stmt;
+    }
 }

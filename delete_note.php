@@ -15,18 +15,17 @@ $todo_list = new ToDoList($db);
 
 $data = json_decode(file_get_contents("php://input"));
 
-$todo_list->user_id= $data->user_id;
-$todo_list->priority=$data->priority;
+$todo_list->id= $data->id;
 
 if ($todo_list->delete()){
 
     echo json_encode(
-        array('Deleted')
+        array('message'=>'Record Deleted')
     );
 
 }
 else {
     echo json_encode(
-        array('Failed to delete')
+        array('message'=>'Failed to delete')
     );
 } 
